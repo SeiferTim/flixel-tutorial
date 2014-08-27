@@ -7,7 +7,7 @@ import flixel.addons.effects.FlxWaveSprite;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -15,7 +15,6 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxRandom;
 using flixel.util.FlxSpriteUtil;
 
 class CombatHUD extends FlxTypedGroup<FlxSprite>
@@ -64,7 +63,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		super();		
 		
 		_sprScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
-		_sprWave = new FlxWaveSprite(_sprScreen, WaveMode.ALL, 4, -1, 4);
+		_sprWave = new FlxWaveSprite(_sprScreen, FlxWaveMode.ALL, 4, -1, 4);
 		add(_sprWave);
 		
 		// first, create our background. Make a black square, then draw borders onto it in white. Add it to our group.
@@ -95,8 +94,8 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_txtPlayerHealth);
 		
 		// create and add a FlxBar to show the enemy's health. We'll make it Red and Yellow.
-		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 10);
-		_enemyHealthBar.createFilledBar(FlxColor.CRIMSON, FlxColor.YELLOW, true, FlxColor.YELLOW);
+		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, LEFT_TO_RIGHT, 20, 10);
+		_enemyHealthBar.createFilledBar(0xffdc143c, FlxColor.YELLOW, true, FlxColor.YELLOW);
 		add(_enemyHealthBar);
 		
 		// create our choices and add them to the group.
@@ -117,7 +116,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		for (d in _damages)
 		{
 			d.color = FlxColor.WHITE;
-			d.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.RED);
+			d.setBorderStyle(SHADOW, FlxColor.RED);
 			d.alignment = "center";
 			d.visible = false;
 			add(d);
@@ -127,12 +126,13 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_results = new FlxText(_sprBack.x + 2, _sprBack.y + 9, 116, "", 18);
 		_results.alignment = "center";
 		_results.color = FlxColor.YELLOW;
-		_results.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY);
+		_results.setBorderStyle(SHADOW, FlxColor.GRAY);
 		_results.visible = false;
 		add(_results);
 		
 		// like we did in our HUD class, we need to set the scrollFactor on each of our children objects to 0,0. We also set alpha to 0 (so we can fade this in)
-		forEach(function(spr:FlxSprite) {
+		forEach(function(spr:FlxSprite)
+		{
 			spr.scrollFactor.set();
 			spr.alpha = 0;
 		});
@@ -148,7 +148,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_sndSelect = FlxG.sound.load(AssetPaths.select__wav);
 		_sndWin = FlxG.sound.load(AssetPaths.win__wav);
 		_sndCombat = FlxG.sound.load(AssetPaths.combat__wav);
-		
 	}
 	
 	/**
@@ -192,18 +191,18 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		visible = true;	// make our hud visible (so draw gets called on it) - note, it's not active, yet!
 		
-		FlxTween.num(0, 1, .66, { ease:FlxEase.circOut, complete:finishFadeIn }, updateAlpha);	// do a numeric tween to fade in our combat hud when the tween is finished, call finishFadeIn
-		
+		// do a numeric tween to fade in our combat hud when the tween is finished, call finishFadeIn
+		FlxTween.num(0, 1, .66, { ease: FlxEase.circOut, onComplete: finishFadeIn }, updateAlpha);
 	}
 	
 	/**
 	 * This function is called by our Tween to fade in/out all the items in our hud.
-	 * @param	Value
 	 */
 	private function updateAlpha(Value:Float):Void
 	{
 		_alpha = Value;
-		forEach(function(spr:FlxSprite) {
+		forEach(function(spr:FlxSprite)
+		{
 			spr.alpha = _alpha;
 		});
 	}
@@ -237,7 +236,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (!_wait)
 		{
@@ -316,7 +315,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			}
 			#end
 		}
-		super.update();
+		super.update(elapsed);
 	}
 	
 	/**
@@ -340,12 +339,13 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				
 				// ...the player attacks the enemy first
 				// they have an 85% chance to hit the enemy
-				if (FlxRandom.chanceRoll(85))
+				if (FlxG.random.bool(85))
 				{
 					// if they hit, deal 1 damage to the enemy, and setup our damage indicator
 					_damages[1].text = "1";
-					FlxTween.tween(_sprEnemy, { x:_sprEnemy.x + 4 }, .1, { complete: function(_) {
-						FlxTween.tween(_sprEnemy, { x:_sprEnemy.x - 4 }, .1);
+					FlxTween.tween(_sprEnemy, { x: _sprEnemy.x + 4 }, .1, { onComplete: function(_)
+					{
+						FlxTween.tween(_sprEnemy, { x: _sprEnemy.x - 4 }, .1);
 					}} );
 					_sndHurt.play();
 					_enemyHealth--;
@@ -372,12 +372,12 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				
 				// setup 2 tweens to allow the damage indicators to fade in and float up from the sprites
 				FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut}, updateDamageY);
-				FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamageAlpha);
+				FlxTween.num(0, 1, .2, { ease: FlxEase.circInOut, onComplete: doneDamageIn }, updateDamageAlpha);
 				
 			case 1:
 				
 				// if the player chose to FLEE, we'll give them a 50/50 chance to escape
-				if (FlxRandom.chanceRoll(50))
+				if (FlxG.random.bool(50))
 				{
 					// if they succeed, we show the 'escaped' message and trigger it to fade in
 					outcome = ESCAPE;
@@ -385,14 +385,14 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 					_sndFled.play();
 					_results.visible = true;
 					_results.alpha = 0;
-					FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+					FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, onComplete:doneResultsIn });
 				}
 				else
 				{
 					// if they fail to escape, the enemy will get a free-swing
 					enemyAttack();
-					FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease:FlxEase.circOut}, updateDamageY);
-					FlxTween.num(0, 1, .2, { ease:FlxEase.circInOut, complete:doneDamageIn }, updateDamageAlpha);
+					FlxTween.num(_damages[0].y, _damages[0].y - 12, 1, { ease: FlxEase.circOut}, updateDamageY);
+					FlxTween.num(0, 1, .2, { ease: FlxEase.circInOut, onComplete: doneDamageIn }, updateDamageAlpha);
 				}
 		}
 		
@@ -406,7 +406,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	private function enemyAttack():Void
 	{
 		// first, lets see if the enemy hits or not. We'll give him a 30% chance to hit
-		if (FlxRandom.chanceRoll(30))
+		if (FlxG.random.bool(30))
 		{
 			// if we hit, flash the screen white, and deal one damage to the player - then update the player's health
 			FlxG.camera.flash(FlxColor.WHITE, .2);
@@ -452,7 +452,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	private function doneDamageIn(_):Void
 	{
-		FlxTween.num(1, 0, .66, { ease:FlxEase.circInOut, startDelay:1, complete:doneDamageOut}, updateDamageAlpha);
+		FlxTween.num(1, 0, .66, { ease: FlxEase.circInOut, startDelay: 1, onComplete: doneDamageOut}, updateDamageAlpha);
 	}
 	
 	/**
@@ -460,7 +460,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 */
 	private function doneResultsIn(_):Void
 	{
-		FlxTween.num(1, 0, .66, { ease:FlxEase.circOut, complete:finishFadeOut, startDelay:1 }, updateAlpha);
+		FlxTween.num(1, 0, .66, { ease: FlxEase.circOut, onComplete: finishFadeOut, startDelay: 1 }, updateAlpha);
 	}
 	
 	/**
@@ -482,7 +482,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			_results.text = "DEFEAT!";
 			_results.visible = true;
 			_results.alpha = 0;
-			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+			FlxTween.tween(_results, { alpha: 1 }, .66, { ease: FlxEase.circInOut, onComplete: doneResultsIn });
 		}
 		else if (_enemyHealth <= 0)
 		{
@@ -492,7 +492,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			_results.text = "VICTORY!";
 			_results.visible = true;
 			_results.alpha = 0;
-			FlxTween.tween(_results, { alpha:1 }, .66, { ease:FlxEase.circInOut, complete:doneResultsIn } );
+			FlxTween.tween(_results, { alpha: 1 }, .66, { ease: FlxEase.circInOut, onComplete: doneResultsIn });
 		}
 		else
 		{

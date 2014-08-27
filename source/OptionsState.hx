@@ -52,14 +52,14 @@ class OptionsState extends FlxState
 		_btnVolumeUp.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnVolumeUp);
 		
-		_barVolume = new FlxBar(_btnVolumeDown.x + _btnVolumeDown.width + 4, _btnVolumeDown.y, FlxBar.FILL_LEFT_TO_RIGHT, Std.int(FlxG.width - 64), Std.int(_btnVolumeUp.height));
-		_barVolume.createFilledBar(FlxColor.CHARCOAL, FlxColor.WHITE, true, FlxColor.WHITE);
+		_barVolume = new FlxBar(_btnVolumeDown.x + _btnVolumeDown.width + 4, _btnVolumeDown.y, LEFT_TO_RIGHT, Std.int(FlxG.width - 64), Std.int(_btnVolumeUp.height));
+		_barVolume.createFilledBar(0xff464646, FlxColor.WHITE, true, FlxColor.WHITE);
 		add(_barVolume);
 		
 		_txtVolumeAmt = new FlxText(0, 0, 200, Std.string( FlxG.sound.volume * 100) + "%", 8);
 		_txtVolumeAmt.alignment = "center";
-		_txtVolumeAmt.borderStyle = FlxText.BORDER_OUTLINE;
-		_txtVolumeAmt.borderColor = FlxColor.CHARCOAL;
+		_txtVolumeAmt.borderStyle = FlxTextBorderStyle.OUTLINE;
+		_txtVolumeAmt.borderColor = 0xff464646;
 		_txtVolumeAmt.y = _barVolume.y + (_barVolume.height / 2) - (_txtVolumeAmt.height / 2);
 		_txtVolumeAmt.screenCenter(true, false);
 		add(_txtVolumeAmt);

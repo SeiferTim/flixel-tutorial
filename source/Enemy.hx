@@ -3,12 +3,11 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVelocity;
 import flixel.system.FlxSound;
-import flixel.util.FlxAngle;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxPoint;
-import flixel.util.FlxRandom;
-import flixel.util.FlxVelocity;
 using flixel.util.FlxSpriteUtil;
 
 class Enemy extends FlxSprite
@@ -45,12 +44,14 @@ class Enemy extends FlxSprite
 		_sndStep.proximity(x,y,FlxG.camera.target, FlxG.width *.6);
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		if (isFlickering())
 			return;
+		
 		_brain.update();
-		super.update();
+		super.update(elapsed);
+		
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 		{
 			_sndStep.setPosition(x + _halfWidth, y + height);
@@ -66,18 +67,20 @@ class Enemy extends FlxSprite
 		}
 		else if (_idleTmr <= 0)
 		{
-			if (FlxRandom.chanceRoll(1))
+			if (FlxG.random.bool(1))
 			{
 				_moveDir = -1;
 				velocity.x = velocity.y = 0;
 			}
 			else
 			{
-				_moveDir = FlxRandom.intRanged(0, 8) * 45;
-				FlxAngle.rotatePoint(speed * .5, 0, 0, 0, _moveDir, velocity);
+				_moveDir = FlxG.random.int(0, 8) * 45;
+				
+				velocity.set(speed * 0.5, 0);
+				velocity.rotate(FlxPoint.weak(), _moveDir);
 				
 			}
-			_idleTmr = FlxRandom.intRanged(1, 4);			
+			_idleTmr = FlxG.random.int(1, 4);			
 		}
 		else
 			_idleTmr -= FlxG.elapsed;

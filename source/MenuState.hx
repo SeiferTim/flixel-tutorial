@@ -8,7 +8,7 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxMath;
+import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxSpriteUtil;
 

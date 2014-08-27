@@ -3,9 +3,10 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
-import flixel.util.FlxAngle;
+import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
@@ -39,10 +40,10 @@ class Player extends FlxSprite
 		var _right:Bool = false;
 		
 		#if !FLX_NO_KEYBOARD
-		_up = FlxG.keys.anyPressed(["UP", "W"]);
-		_down = FlxG.keys.anyPressed(["DOWN", "S"]);
-		_left = FlxG.keys.anyPressed(["LEFT", "A"]);
-		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
+		_up = FlxG.keys.anyPressed([UP, W]);
+		_down = FlxG.keys.anyPressed([DOWN, S]);
+		_left = FlxG.keys.anyPressed([LEFT, A]);
+		_right = FlxG.keys.anyPressed([RIGHT, D]);
 		#end
 		#if mobile
 		_up = _up || PlayState.virtualPad.buttonUp.status == FlxButton.PRESSED;
@@ -89,7 +90,9 @@ class Player extends FlxSprite
 				mA = 0;
 				facing = FlxObject.RIGHT;
 			}
-			FlxAngle.rotatePoint(speed, 0, 0, 0, mA, velocity);
+			
+			velocity.set(speed, 0);
+			velocity.rotate(FlxPoint.weak(), mA);
 		}
 		
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
@@ -111,10 +114,10 @@ class Player extends FlxSprite
 		
 	}
 	
-	override public function update():Void 
+	override public function update(elapsed:Float):Void 
 	{
 		movement();
-		super.update();
+		super.update(elapsed);
 	}
 	
 	override public function destroy():Void 

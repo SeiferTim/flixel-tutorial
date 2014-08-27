@@ -5,7 +5,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.group.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxVirtualPad;
@@ -64,7 +64,7 @@ class PlayState extends FlxState
 		
 		add(_player);
 		
-		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
+		FlxG.camera.follow(_player, TOPDOWN, 1);
 		
 		_hud = new HUD();
 		add(_hud);
@@ -128,9 +128,9 @@ class PlayState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 
 		if (_ending)
 		{

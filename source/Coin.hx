@@ -17,7 +17,7 @@ class Coin extends FlxSprite
 	{
 		alive = false;
 		
-		FlxTween.tween(this, { alpha:0, y:y - 16 }, .66, {ease:FlxEase.circOut, complete:finishKill } );
+		FlxTween.tween(this, { alpha: 0, y: y - 16 }, .66, { ease: FlxEase.circOut, onComplete: finishKill });
 	}
 	
 	private function finishKill(_):Void
