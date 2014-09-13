@@ -93,25 +93,29 @@ class Player extends FlxSprite
 			
 			velocity.set(speed, 0);
 			velocity.rotate(FlxPoint.weak(), mA);
-		}
-		
-		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
-		{
-			_sndStep.play();
 			
-			switch(facing)
+			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 			{
-				case FlxObject.LEFT, FlxObject.RIGHT:
-					animation.play("lr");
-					
-				case FlxObject.UP:
-					animation.play("u");
-					
-				case FlxObject.DOWN:
-					animation.play("d");
+				_sndStep.play();
+				
+				switch(facing)
+				{
+					case FlxObject.LEFT, FlxObject.RIGHT:
+						animation.play("lr");
+						
+					case FlxObject.UP:
+						animation.play("u");
+						
+					case FlxObject.DOWN:
+						animation.play("d");
+				}
 			}
 		}
-		
+		else if (animation.curAnim != null)
+		{
+			animation.curAnim.curFrame = 0;
+			animation.curAnim.paused = true;
+		}
 	}
 	
 	override public function update(elapsed:Float):Void 
