@@ -5,10 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.util.FlxAngle;
-import flixel.FlxG;
 
 class Player extends FlxSprite
 {
