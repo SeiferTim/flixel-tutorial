@@ -30,7 +30,7 @@
 	<classpath name="source" />
 	
 	<!--You can use rename="newName" to shorten the paths to individual subdirectories!-->
-	<assets path="assets/data" include="*.oel|*.oep" />
+	<assets path="assets/data" include="*.oel" />
 	<assets path="assets/images" include="*.png" />
 	<assets path="assets/sounds" include="*.wav" />
 	<assets path="assets/music" include="*.mp3" if="flash" />
