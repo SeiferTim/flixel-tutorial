@@ -166,7 +166,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		var gc:Float = 1 / 2;
 		var bc:Float = 1 / 6;
 		_sprScreen.pixels.applyFilter(_sprScreen.pixels, _sprScreen.pixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]));
-		_sprScreen.resetFrameBitmapDatas();
 		_sprScreen.dirty = true;
 		
 		_sndCombat.play();
@@ -177,7 +176,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		// setup our enemy
 		_enemyMaxHealth = _enemyHealth = (e.etype + 1) * 2; // each enemy will have health based on their type: Type 0 = 2 health, type 1 = 4 health
-		_enemyHealthBar.currentValue = 100;	// the enemy's health bar starts at 100%
+		_enemyHealthBar.value = 100;	// the enemy's health bar starts at 100%
 		_sprEnemy.changeEnemy(e.etype);	// change our enemy's image to match their type.
 		
 		// make sure we initialize all of these before we start so nothing looks 'wrong' the second time we get 
@@ -349,7 +348,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 					}} );
 					_sndHurt.play();
 					_enemyHealth--;
-					_enemyHealthBar.currentValue = (_enemyHealth / _enemyMaxHealth) * 100; // change the enemy's health bar
+					_enemyHealthBar.value = (_enemyHealth / _enemyMaxHealth) * 100; // change the enemy's health bar
 				}
 				else
 				{

@@ -146,7 +146,7 @@ class OptionsState extends FlxState
 	private function updateVolume():Void
 	{
 		var vol:Int = Math.round(FlxG.sound.volume * 100);
-		_barVolume.currentValue = vol;
+		_barVolume.value = vol;
 		_txtVolumeAmt.text = Std.string(vol) + "%";
 	}
 	

@@ -114,7 +114,7 @@ class Player extends FlxSprite
 		else if (animation.curAnim != null)
 		{
 			animation.curAnim.curFrame = 0;
-			animation.curAnim.paused = true;
+			animation.curAnim.pause();
 		}
 	}
 	
